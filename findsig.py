@@ -26,6 +26,50 @@ def find_tgs(line, n):
         tgs += [ (line[m.start():m.end()], n, m.start(), m.end()) for m in re.finditer(pattern, line) ]
     return tgs
 
+def find_patterns(line, n, patterns):
+    matches = []
+    for pattern in patterns:
+        matches += [ (line[m.start():m.end()], n, m.start(), m.end()) for m in re.finditer(pattern, line) ]
+    return matches
+
+def find_curved(line, n):
+    patterns = [
+            "AAAAnnnnnnnAAAAnnnnnnnAAAA",
+            "TTTTnnnnnnnTTTTnnnnnnnTTTT",
+            "TTTAAA"
+            ]
+    return find_patterns(line, n, patterns)
+
+def find_kinked(line, n):
+    patterns = [
+            "TAnnnTGnnnCA",
+            "TAnnnCAnnnTG",
+            "TGnnnTAnnnCA",
+            "TGnnnCAnnnTA",
+            "CAnnnTGnnnTA",
+            "CAnnnTAnnnTG"
+            ]
+    return find_patterns(line, n, patterns)
+
+def find_topo(line, n):
+    patterns = [
+            r"[AG]n[TG]nnCnnG[GT]Tn[TC]n[TC]"
+            ]
+    return find_patterns(line, n, patterns)
+
+
+def find_special(line, n):
+    patterns = [
+            "TCTTTAATTTCTAATATATTTAGGA"
+            ]
+    return find_patterns(line, n, patterns)
+
+def find_ats(line, n):
+    patterns = [
+            "AAAA",
+            "TTTT"
+            ]
+    return find_patterns(line, n, patterns)
 
 
 
@@ -34,6 +78,12 @@ def findsig(filename):
     b_mof = []
     oris = []
     tgs = []
+    curved = []
+    kinked = []
+    topo = []
+    special = []
+    ats = []
+
     lines = fh.readlines()
     line_no = -1
     print(lines)
@@ -48,6 +98,23 @@ def findsig(filename):
         tg = find_tgs(line, line_no)
         if tg:
             tgs.append(tg)
+        c = find_curved(line, line_no)
+        if c:
+            curved.append(c)
+        k = find_kinked(line, line_no)
+        if k:
+            kinked.append(k)
+        t = find_topo(line, line_no)
+        if t:
+            topo.append(t)
+        s = find_special(line, line_no)
+        if s:
+            special.append(s)
+        at = find_ats(line, line_no)
+        if at:
+            ats.append(at)
+
+
 
     print('\n\n\nThe Values are in the format:')
     print('(Matching string, line, string start, string end)')
@@ -57,6 +124,20 @@ def findsig(filename):
     print(oris)
     print('\n\nTG Richness')
     print(tgs)
+    print('\n\nCurved DNA')
+    print(curved)
+    print('\n\nKinked DNA')
+    print(kinked)
+    print('\n\nTopo')
+    print(topo)
+    print('\n\nConsensus Motif')
+    print(special)
+    print('\n\nAT Richness')
+    print(ats)
+
+
+
+
 
 
 findsig('input.txt')
