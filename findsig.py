@@ -1,5 +1,12 @@
 import re
 
+def find_patterns(line, n, patterns):
+    matches = []
+    for pattern in patterns:
+        matches += [ (line[m.start():m.end()], n, m.start(), m.end()) for m in re.finditer(pattern, line) ]
+    return matches
+
+
 def find_mortifs(line, n):
     pat1 = 'AATAACAA'
     pat2 = 'AWWRTAANNWWGNCC'
@@ -14,23 +21,11 @@ def find_mortifs(line, n):
 
 def find_oris(line, n):
     patterns = ['ATTA', 'ATTT', 'ATTTTA']
-    oris = []
-    for pattern in patterns:
-        oris += [ (line[m.start():m.end()], n, m.start(), m.end()) for m in re.finditer(pattern, line) ]
-    return oris
+    return find_patterns(line, n, patterns)
 
 def find_tgs(line, n):
     patterns = ['TGTTTTG', 'TTTTGGGG', 'TGTTTTTG']
-    tgs = []
-    for pattern in patterns:
-        tgs += [ (line[m.start():m.end()], n, m.start(), m.end()) for m in re.finditer(pattern, line) ]
-    return tgs
-
-def find_patterns(line, n, patterns):
-    matches = []
-    for pattern in patterns:
-        matches += [ (line[m.start():m.end()], n, m.start(), m.end()) for m in re.finditer(pattern, line) ]
-    return matches
+    return find_patterns(line, n, patterns)
 
 def find_curved(line, n):
     patterns = [
@@ -86,7 +81,6 @@ def findsig(filename):
 
     lines = fh.readlines()
     line_no = -1
-    print(lines)
     for line in lines:
         line_no += 1
         mortifs = find_mortifs(line, line_no)
@@ -140,4 +134,4 @@ def findsig(filename):
 
 
 
-findsig('input.txt')
+findsig('CHR5.fasta')
